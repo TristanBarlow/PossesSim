@@ -33,7 +33,6 @@ public class TileManager : MonoBehaviour
 
         var nodes = AStar.GetPath(0, 0, 20, 20, (int x, int y) =>
         {
-            Debug.Log("X:" + x + " Y:" + y);
             if (x < 0 || x > width || y < 0 || y > height) return false;
             return getTile(x, y).canWalk;
         });
