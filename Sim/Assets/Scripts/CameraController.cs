@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(TileManager.Instance.worldToCoords(transform.position));
+            Debug.Log(TileManager.Instance.WorldToTile(transform.position));
         }
     }
 

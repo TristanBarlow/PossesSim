@@ -2,7 +2,7 @@
 
 public delegate bool CanWalk(int x, int y);
 
-class Node {
+public class Node {
     public int x;
     public int y;
     public float h;
@@ -25,11 +25,13 @@ class Node {
 
 static class AStar
 {
-    public static List<Node> GetPath(int x1, int y1, int x2, int y2, CanWalk canWalk)
+    public static Stack<Node> GetPath(int x1, int y1, int x2, int y2, CanWalk canWalk)
     {
         var open = new Dictionary<string, Node>();
         var closed = new Dictionary<string, Node>();
-        var strt = new Node(x1, y1, null, 0, 0);
+        var strt = new Node(x1, y1, null, GetH(x1, y1, x2, y2), 0);
+
+        var closest = strt;
 
         open.Add(strt.str, strt);
         while(open.Count > 0)
@@ -41,25 +43,24 @@ static class AStar
 
             if(current.x == x2 && current.y == y2)
             {
-                var path = new List<Node>();
-                while(current != null)
-                {
-                    path.Insert(0, current);
-                    current = current.parent;
-                }
-                    return path;
+                return MakePath(current);
             }
 
-            current.AddIfCanWalk(canWalk, -1, -1);
+            if (current.f < closest.f)
+            {
+                closest = current;
+            }
+
+            /*current.AddIfCanWalk(canWalk, -1, -1);*/
             current.AddIfCanWalk(canWalk, 0, -1);
             current.AddIfCanWalk(canWalk, -1, 0);
 
-            current.AddIfCanWalk(canWalk, 1, 1);
+            /*current.AddIfCanWalk(canWalk, 1, 1);*/
             current.AddIfCanWalk(canWalk, 0, 1);
             current.AddIfCanWalk(canWalk, 1, 0);
 
-            current.AddIfCanWalk(canWalk, 1, -1);
-            current.AddIfCanWalk(canWalk, -1, 1);
+            /*current.AddIfCanWalk(canWalk, 1, -1);*/
+            /*current.AddIfCanWalk(canWalk, -1, 1);*/
 
             foreach(var child in current.children)
             {
@@ -67,7 +68,7 @@ static class AStar
                     continue;
 
                 child.g = current.g + 1;
-                child.h = ((child.x - x2) * (child.x - x2)) + ((child.y - y2) * (child.y - y2));
+                child.h = GetH(child.x, child.y, x2, y2);
 
                 if (open.ContainsKey(child.str))
                     continue;
@@ -75,9 +76,24 @@ static class AStar
                 open.Add(child.str, child);
             }
         }
-        return null;
+        return MakePath(closest);
     }
 
+    private static Stack<Node> MakePath(Node current)
+    {
+        var path = new Stack<Node>();
+        while (current != null)
+        {
+            path.Push(current);
+            current = current.parent;
+        }
+        return path;
+    }
+
+    static float GetH(int x1, int y1, int x2, int y2)
+    {
+        return ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2));
+    }
 
     static Node LowestF(Dictionary<string, Node> nodes)
     {

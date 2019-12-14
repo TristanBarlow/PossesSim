@@ -8,9 +8,9 @@ public class Tile : MonoBehaviour
     private SpriteRenderer render;
     public bool canWalk = true;
 
-    private Vector2 pos;
+    private Vector2Int pos;
 
-    public Vector2 Pos { set { pos = value; } get { return pos; } }
+    public Vector2Int Pos { set { pos = value; } get { return pos; } }
 
     // Start is called before the first frame update
     void Awake()
@@ -23,6 +23,7 @@ public class Tile : MonoBehaviour
     {
         
     }
+
 
     public void Block()
     {
