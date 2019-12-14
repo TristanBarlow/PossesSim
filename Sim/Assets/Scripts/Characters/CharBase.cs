@@ -16,4 +16,8 @@ public class CharBase : MonoBehaviour
     {
         
     }
+
+    void MoveTo(int x, int y )
+    {
+    }
 }

@@ -38,5 +38,7 @@ public class Tile : MonoBehaviour
     public void SetSprite(Sprite sprite)
     {
         render.sprite = sprite;
+        var size = TileManager.Instance.tileSize;
+        transform.localScale = new Vector3(size/ render.size.x, size/render.size.y);
     }
 }

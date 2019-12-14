@@ -19,6 +19,11 @@ public class CameraController : MonoBehaviour
         MoveIfKey(KeyCode.S, new Vector3(0, -moveSpeed, 0));
         MoveIfKey(KeyCode.D, new Vector3(moveSpeed, 0));
         MoveIfKey(KeyCode.A, new Vector3(-moveSpeed, 0));
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log(TileManager.Instance.worldToCoords(transform.position));
+        }
     }
 
     void MoveIfKey(KeyCode key, Vector3 delta)
