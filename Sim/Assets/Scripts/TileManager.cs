@@ -20,12 +20,10 @@ public class TileManager : MonoBehaviour
     {
         Instance = this;
 
-        Debug.Log(string.Format("{0}, {1}, {2}", Nearest(tileSize, 0.7f), Nearest(tileSize, .4f), Nearest(tileSize, 0.1f)));
-
         canWalk = (int x, int y) =>
         {
             if (x < 0 || x >= width || y < 0 || y >= height) return false;
-            return GetTile(x, y).canWalk;
+            return GetTile(x, y).CanWalk;
         };
 
         var xSize = width / 2;
@@ -51,7 +49,6 @@ public class TileManager : MonoBehaviour
                 }
                 tiles.Add(tile);
             }
-        GetTile(38, 38).Block();
     }
 
     public Vector2Int RandomPoint()

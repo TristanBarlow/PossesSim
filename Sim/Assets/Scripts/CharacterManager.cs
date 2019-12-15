@@ -7,6 +7,7 @@ public class CharacterManager : MonoBehaviour
     public static CharacterManager Instance;
     public GameObject characterBase;
 
+    private int index = 0;
     private void Awake()
     {
         Instance = this;
@@ -26,6 +27,10 @@ public class CharacterManager : MonoBehaviour
             var tile = TileManager.Instance.RandomFreeTile();
             var clone = Instantiate(characterBase, tile.transform.position, new Quaternion());
             clone.transform.SetParent(transform);
+            var c = clone.GetComponent<CharBase>();
+            c.name = "Char: " + index.ToString();
+            c.Spawned(tile);
+            index++;
         }
     }
 }

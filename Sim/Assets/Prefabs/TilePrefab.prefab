@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3713933409872859262}
   - component: {fileID: 9180977193295505714}
   - component: {fileID: 1432884921544541877}
+  - component: {fileID: -5388888036850537806}
   m_Layer: 0
   m_Name: TilePrefab
   m_TagString: Untagged
@@ -93,4 +94,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9b151a3a8a94234b58e76387ae2e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canWalk: 1
+  character: {fileID: 0}
+--- !u!61 &-5388888036850537806
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5031519451573818922}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.28, y: 1.28}
+  m_EdgeRadius: 0
