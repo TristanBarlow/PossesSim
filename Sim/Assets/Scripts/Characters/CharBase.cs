@@ -8,7 +8,7 @@ public class CharBase : MonoBehaviour
     Stack<Node> path = new Stack<Node>();
     Tile nextTile;
     Tile currentTile;
-    Tile lastTile;
+    Vector3 targetPos = new Vector3();
 
     private Vector2Int _targ;
     private Vector2Int Target { set { _targ = value;  RecalculatePath(); } get { return _targ; } }
@@ -41,7 +41,7 @@ public class CharBase : MonoBehaviour
     bool AtTarget()
     {
         if (!nextTile) return true;
-        return Vector3.Distance(transform.position, nextTile.transform.position) < 0.001f;
+        return Vector3.Distance(transform.position, targetPos) < 0.3f;
     }
 
     private bool TryOccupyTarget()
@@ -71,8 +71,7 @@ public class CharBase : MonoBehaviour
             if (wait) return;
 
             float step = speed * Time.deltaTime;
-            var target = nextTile.transform;
-            transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
 
           
             return;
@@ -89,6 +88,8 @@ public class CharBase : MonoBehaviour
         {
             var node = path.Pop();
             nextTile = TileManager.Instance.GetTile(node.x, node.y);
+            var pos = nextTile.transform.position;
+            targetPos = new Vector3(pos.x + Random.Range(-1f, 1f) * .1f, pos.y + Random.Range(-1f, 1f) * .1f);
             return true;
         }
         nextTile = null;
