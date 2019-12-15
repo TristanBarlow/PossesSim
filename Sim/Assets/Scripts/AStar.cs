@@ -51,14 +51,14 @@ static class AStar
                 closest = current;
             }
 
-            /*current.AddIfCanWalk(canWalk, -1, -1);*/
             current.AddIfCanWalk(canWalk, 0, -1);
             current.AddIfCanWalk(canWalk, -1, 0);
 
-            /*current.AddIfCanWalk(canWalk, 1, 1);*/
             current.AddIfCanWalk(canWalk, 0, 1);
             current.AddIfCanWalk(canWalk, 1, 0);
 
+            /*current.AddIfCanWalk(canWalk, -1, -1);*/
+            /*current.AddIfCanWalk(canWalk, 1, 1);*/
             /*current.AddIfCanWalk(canWalk, 1, -1);*/
             /*current.AddIfCanWalk(canWalk, -1, 1);*/
 

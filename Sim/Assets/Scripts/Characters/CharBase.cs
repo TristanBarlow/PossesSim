@@ -41,7 +41,7 @@ public class CharBase : MonoBehaviour
     bool AtTarget()
     {
         if (!nextTile) return true;
-        return Vector3.Distance(transform.position, nextTile.transform.position) < 0.0001f;
+        return Vector3.Distance(transform.position, nextTile.transform.position) < 0.001f;
     }
 
     private bool TryOccupyTarget()
@@ -61,6 +61,11 @@ public class CharBase : MonoBehaviour
                     Debug.Log("failed to occupy tile");
                     return;
                 }
+                else
+                {
+                    currentTile.TryRelease(this);
+                    currentTile = nextTile;
+                }
             }
 
             if (wait) return;
@@ -69,21 +74,12 @@ public class CharBase : MonoBehaviour
             var target = nextTile.transform;
             transform.position = Vector3.MoveTowards(transform.position, target.position, step);
 
+          
             return;
         }
 
-        if(nextTile)
-        {
-            Debug.Log("At Next tile");
-            if(currentTile != lastTile) 
-                lastTile?.TryRelease(this);
-            lastTile = currentTile;
-            currentTile = nextTile;
-            NextNode();
-            return;
-        }
-        
-        if(path.Count < 1 )
+     
+        if(!NextNode())
              Target = TileManager.Instance.RandomPoint();
     }
 
@@ -122,7 +118,7 @@ public class CharBase : MonoBehaviour
     public void  RecalculatePath()
     {
         path = TileManager.Instance.GetPath(transform.position, Target.x, Target.y);
-        Debug.Log("Calculating path");
         NextNode();
+        Debug.Log("Calculating path");
     }
 }
