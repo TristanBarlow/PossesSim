@@ -7,12 +7,12 @@ public class CharPlayer : CharBase
     // Start is called before the first frame update
     void Start()
     {
-        
+        TargetTile = TileManager.Instance.RandomPoint();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void ReachedTarget()
     {
-        
+        base.ReachedTarget();
+        TargetTile = TileManager.Instance.RandomPoint();
     }
 }

@@ -5,28 +5,36 @@ using UnityEngine;
 public class CharBase : MonoBehaviour
 {
 
-    Stack<Node> path = new Stack<Node>();
-    Tile nextTile;
-    Tile currentTile;
-    Vector3 targetPos = new Vector3();
-
+    private Stack<Node> path = new Stack<Node>();
     private Vector2Int _targ;
-    private Vector2Int Target { set { _targ = value;  RecalculatePath(); } get { return _targ; } }
+    protected Vector3 targetPos = new Vector3();
+
+    protected Vector2Int TargetTile { set { _targ = value;  RecalculatePath(); } get { return _targ; } }
+    protected Tile currentTile;
+    protected Tile nextTile;
+    protected SpriteRenderer sprite;
+    protected BoxCollider2D collider;
+
     public float speed = 1.0f;
     public bool wait = false;
-    public string id = "none";
     public float intimidation = 0.0f;
 
     private void Awake()
     {
         intimidation = Random.Range(0f, 1f);
+        sprite = GetComponent<SpriteRenderer>();
+        collider  = GetComponent<BoxCollider2D>();
+
+        collider.size = sprite.size * 0.75f;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
         TryMove();
     }
+
+    protected virtual void ReachedTarget() { }
+    protected virtual void ReachedNode() { }
 
     public void Spawned(Tile tile)
     {
@@ -63,7 +71,7 @@ public class CharBase : MonoBehaviour
                 }
                 else
                 {
-                    currentTile.TryRelease(this);
+                    currentTile?.TryRelease(this);
                     currentTile = nextTile;
                 }
             }
@@ -73,13 +81,10 @@ public class CharBase : MonoBehaviour
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
 
-          
             return;
         }
 
-     
-        if(!NextNode())
-             Target = TileManager.Instance.RandomPoint();
+         NextNode();
     }
 
     private bool NextNode()
@@ -89,10 +94,15 @@ public class CharBase : MonoBehaviour
             var node = path.Pop();
             nextTile = TileManager.Instance.GetTile(node.x, node.y);
             var pos = nextTile.transform.position;
-            targetPos = new Vector3(pos.x + Random.Range(-1f, 1f) * .1f, pos.y + Random.Range(-1f, 1f) * .1f);
+            targetPos = new Vector3(pos.x + Random.Range(-1f, 1f) * .05f, pos.y + Random.Range(-1f, 1f) * .05f);
+            ReachedNode();
             return true;
         }
-        nextTile = null;
+        if (nextTile)
+        {
+            ReachedTarget();
+            nextTile = null;
+        }
         return false;
     }
 
@@ -118,7 +128,7 @@ public class CharBase : MonoBehaviour
 
     public void  RecalculatePath()
     {
-        path = TileManager.Instance.GetPath(transform.position, Target.x, Target.y);
+        path = TileManager.Instance.GetPath(transform.position, TargetTile.x, TargetTile.y);
         NextNode();
         Debug.Log("Calculating path");
     }

@@ -120,6 +120,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &181735616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 181735617}
+  m_Layer: 0
+  m_Name: EnemyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &181735617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181735616}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.02, y: -0.12, z: -22.13859}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1182448684547153915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,17 +215,17 @@ PrefabInstance:
     - target: {fileID: 1182448684572884438, guid: c187a36fc1ad5c543bdf05eba1b54e3a,
         type: 3}
       propertyPath: width
-      value: 10
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1182448684572884438, guid: c187a36fc1ad5c543bdf05eba1b54e3a,
         type: 3}
       propertyPath: height
-      value: 10
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1182448684572884438, guid: c187a36fc1ad5c543bdf05eba1b54e3a,
         type: 3}
       propertyPath: tileSize
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1182448684572884439, guid: c187a36fc1ad5c543bdf05eba1b54e3a,
         type: 3}
@@ -271,7 +301,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3064858470925858839, guid: 283fa000c2cde574d85ae47426ac7098, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 283fa000c2cde574d85ae47426ac7098, type: 3}
 --- !u!1001 &8711182777703821597
 PrefabInstance:
