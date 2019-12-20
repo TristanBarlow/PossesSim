@@ -13,6 +13,7 @@ public class CharPlayer : CharBase
     protected override void ReachedTarget()
     {
         base.ReachedTarget();
+        Debug.Log("Reached target");
         TargetTile = TileManager.Instance.RandomPoint();
     }
 }

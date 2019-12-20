@@ -7,17 +7,21 @@ public class CharBase : MonoBehaviour
 
     private Stack<Node> path = new Stack<Node>();
     private Vector2Int _targ;
-    protected Vector3 targetPos = new Vector3();
 
-    protected Vector2Int TargetTile { set { _targ = value;  RecalculatePath(); } get { return _targ; } }
+    protected Vector3 targetPos = new Vector3();
+    protected Vector2Int TargetTile { set { _targ = value;  RecalculatePath(); } get => _targ;  }
     protected Tile currentTile;
     protected Tile nextTile;
     protected SpriteRenderer sprite;
     protected BoxCollider2D collider;
+    protected string Name => name;
 
+    protected float timeStuck;
+
+    public float maxWaitTime = 2f;
     public float speed = 1.0f;
-    public bool wait = false;
-    public float intimidation = 0.0f;
+    public bool wait;
+    public float intimidation;
 
     private void Awake()
     {
@@ -52,28 +56,37 @@ public class CharBase : MonoBehaviour
         return Vector3.Distance(transform.position, targetPos) < 0.3f;
     }
 
-    private bool TryOccupyTarget()
-    {
-        return nextTile.TryOccupy(this);
-    }
+    private bool TryOccupyTarget => nextTile.TryOccupy(this);
+    
 
     private void TryMove()
     {
+        
         if (!AtTarget())
         {
             if (!nextTile.IsOccupant(this))
             {
-                var success = TryOccupyTarget();
+                var success = TryOccupyTarget;
                 if (!success)
                 {
-                    Debug.Log("failed to occupy tile");
+                    timeStuck += Time.deltaTime;
+                    if (timeStuck > maxWaitTime)
+                    {
+                        if (RecalculatePath())
+                        {
+                            Debug.Log("waited too long recalculating path");
+                            timeStuck = 0;
+                        }
+                        else
+                        {
+                            Debug.LogError("Cannot find path");
+                        }
+                    }
                     return;
                 }
-                else
-                {
-                    currentTile?.TryRelease(this);
-                    currentTile = nextTile;
-                }
+                timeStuck = 0;
+                currentTile?.TryRelease(this);
+                currentTile = nextTile;
             }
 
             if (wait) return;
@@ -98,7 +111,7 @@ public class CharBase : MonoBehaviour
             ReachedNode();
             return true;
         }
-        if (nextTile)
+        if (path.Count == 0)
         {
             ReachedTarget();
             nextTile = null;
@@ -126,10 +139,15 @@ public class CharBase : MonoBehaviour
         }
     }
 
-    public void  RecalculatePath()
+    public bool RecalculatePath()
     {
-        path = TileManager.Instance.GetPath(transform.position, TargetTile.x, TargetTile.y);
-        NextNode();
-        Debug.Log("Calculating path");
+        var p = TileManager.Instance.GetPath(transform.position, TargetTile.x, TargetTile.y);
+       if (p.Count > 0)
+        {
+            path = p;
+            return NextNode();
+        }
+        Debug.Log("No path");
+        return false;
     }
 }
