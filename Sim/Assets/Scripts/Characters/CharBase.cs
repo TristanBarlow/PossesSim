@@ -57,7 +57,6 @@ public class CharBase : MonoBehaviour
     }
 
     private bool TryOccupyTarget => nextTile.TryOccupy(this);
-    
 
     private void TryMove()
     {
