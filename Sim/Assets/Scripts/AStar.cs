@@ -2,6 +2,42 @@
 
 public delegate bool CanWalk(int x, int y);
 
+public class AStarPath
+{
+    private List<Node> Path;
+    private int index = 0;
+    private bool _fullPath;
+
+    public AStarPath(bool r, List<Node> p)
+    {
+        _fullPath = r; Path = p;
+    }
+
+    public override string ToString() 
+    {
+        var str = "";
+        foreach(var p in Path)
+        {
+            str += "(" + p.str + ") ";
+        }
+        return str;
+    }
+
+    public  void Reset() { index =0; }
+
+    public bool IsEmpty => Path.Count == 0;
+    public bool FullPath => _fullPath;
+    public bool AtEnd => index == Path.Count - 1;
+    public Node FinalNode => Path[Path.Count - 1];
+
+    public Node Next()
+    {
+        if (index > Path.Count - 1) return null;
+        index++;
+        return Path[index];
+    }
+}
+
 public class Node {
     public int x;
     public int y;
@@ -11,7 +47,7 @@ public class Node {
     public Node parent;
     public List<Node> children = new List<Node>();
     public float f { get { return g + h; } }
-    public string str { get { return "x" + x + "y" + y; } }
+    public string str  => "x:" + x + "y:" + y; 
     public Node(int x, int y, Node parent, float h, float g)
     {
         this.x = x; this.y = y; this.h = h; this.g = g; this.parent = parent;
@@ -25,7 +61,7 @@ public class Node {
 
 static class AStar
 {
-    public static Stack<Node> GetPath(int x1, int y1, int x2, int y2, CanWalk canWalk)
+    public static AStarPath GetPath(int x1, int y1, int x2, int y2, CanWalk canWalk, bool allowIncomplete = true)
     {
         var open = new Dictionary<string, Node>();
         var closed = new Dictionary<string, Node>();
@@ -43,10 +79,10 @@ static class AStar
 
             if(current.x == x2 && current.y == y2)
             {
-                return MakePath(current);
+                return MakePath(current, true);
             }
 
-            if (current.f < closest.f)
+            if (current.h < closest.h)
             {
                 closest = current;
             }
@@ -76,18 +112,24 @@ static class AStar
                 open.Add(child.str, child);
             }
         }
-        return MakePath(closest);
+
+        if(allowIncomplete)
+            return MakePath(closest, false);
+
+        return null;
     }
 
-    private static Stack<Node> MakePath(Node current)
+    private static AStarPath MakePath(Node current, bool complete )
     {
-        var path = new Stack<Node>();
+        var path = new List<Node>();
+        var last = current;
         while (current != null)
         {
-            path.Push(current);
+            path.Add(current);
             current = current.parent;
         }
-        return path;
+        path.Reverse();
+        return new AStarPath(complete, path);
     }
 
     static float GetH(int x1, int y1, int x2, int y2)

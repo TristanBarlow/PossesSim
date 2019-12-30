@@ -1,12 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Enemy : CharBase
 {
-    void Hit()
+
+    private void Start()
     {
-        Debug.Log("Hit");
+        TargetTile = TileManager.Instance.RandomPoint();
+    }
+
+    protected override void ReachedTarget()
+    {
+        TargetTile = TileManager.Instance.RandomPoint();
     }
 
     void Update()

@@ -8,7 +8,8 @@ public class Tile : MonoBehaviour
     private SpriteRenderer render;
     private bool canWalk = true;
 
-    public bool CanWalk { get { return canWalk && character == null; } }
+    public bool CanWalkWithChar { get { return canWalk && character == null; } }
+    public bool CanWalkNoChar { get { return canWalk; } }
 
     private Vector2Int pos;
     public Vector2Int Pos { set { pos = value; } get { return pos; } }
@@ -35,7 +36,7 @@ public class Tile : MonoBehaviour
 
     public bool TryOccupy(CharBase c)
     {
-        if (CanWalk ||IsOccupant(c))
+        if (CanWalkWithChar || IsOccupant(c))
         {
             character = c;
             return true;

@@ -8,7 +8,8 @@ public class CharBaseManager<T>: MonoBehaviour where T: CharBase
     protected int index = 0;
     public GameObject basePrefab;
 
-    public bool KillChar(string name)
+    protected virtual string NamePref { get; }
+    public virtual bool KillChar(string name)
     {
         if (!chars.ContainsKey(name)) return false;
 
@@ -17,13 +18,13 @@ public class CharBaseManager<T>: MonoBehaviour where T: CharBase
         return true;
     }
 
-    public void SpawnChar()
+    public virtual void SpawnChar()
     {
         var tile = TileManager.Instance.RandomFreeTile();
         var clone = Instantiate(basePrefab, tile.transform.position, new Quaternion());
         clone.transform.SetParent(transform);
         var c = clone.GetComponent<T>();
-        c.name = "Char: " + index.ToString();
+        c.name = NamePref + index.ToString();
         c.Spawned(tile);
         index++;
 

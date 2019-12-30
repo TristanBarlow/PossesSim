@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterManager : CharBaseManager<CharPlayer>
 {
     public static CharacterManager Instance;
+    protected override string NamePref => "Char";
     private void Awake()
     {
         Instance = this;
@@ -16,6 +17,7 @@ public class CharacterManager : CharBaseManager<CharPlayer>
         if (Input.GetMouseButtonDown(0))
         {
             SpawnChar();
+            EnemyManager.Instance.SpawnChar();
         }
     }
 }

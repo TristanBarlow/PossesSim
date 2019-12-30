@@ -9,21 +9,29 @@ public class TileManager : MonoBehaviour
     public GameObject tilePrefab;
     public int width = 40;
     public int height = 40;
-    public float tileSize = 0.5f;
+    public float tileSize = 1f;
 
     private List<Tile> tiles = new List<Tile>();
     private List<Tile> clearTiles = new List<Tile>();
 
-    private CanWalk canWalk;
+    private CanWalk canWalkWithChar;
+    private CanWalk canWalkNoChar;
+
 
     private void Awake()
     {
         Instance = this;
 
-        canWalk = (int x, int y) =>
+        canWalkWithChar = (int x, int y) =>
         {
             if (x < 0 || x >= width || y < 0 || y >= height) return false;
-            return GetTile(x, y).CanWalk;
+            return GetTile(x, y).CanWalkWithChar;
+        };
+
+        canWalkNoChar = (int x, int y) =>
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height) return false;
+            return GetTile(x, y).CanWalkNoChar;
         };
 
         var xSize = width / 2;
@@ -39,7 +47,7 @@ public class TileManager : MonoBehaviour
                 tile.SetSprite(RandSprite());
                 tile.Pos = new Vector2Int(x + xSize, y + ySize);
 
-                if (Random.Range(0f, 1f) > 0.75)
+                if (Random.Range(0f, 1f) > 0.9)
                 {
                     tile.Block();
                 }
@@ -73,28 +81,28 @@ public class TileManager : MonoBehaviour
         return tileSprites[Random.Range(0, tileSprites.Length)];
     }
 
-    public Stack<Node> GetPath(int x1, int y1, int x2, int y2)
+    public AStarPath GetPath(int x1, int y1, int x2, int y2, bool withChar)
     {
-        var nodes = AStar.GetPath(x1, y1, x2, y2, canWalk);
+        var result = AStar.GetPath(x1, y1, x2, y2, withChar ? canWalkWithChar : canWalkNoChar);
 
-        if (nodes == null)
+        if (result.IsEmpty)
         {
             Debug.LogError("No path found");
         }
-        return nodes;
+        return result;
     }
 
-    public Stack<Node> GetPath(Vector3 strt, Vector3 end)
+    public AStarPath GetPath(Vector3 strt, Vector3 end, bool withChar = true)
     {
         var strtTile = WorldToTile(strt);
         var endTile = WorldToTile(end);
-        return GetPath(strtTile.x, strtTile.y, endTile.x, endTile.y);
+        return GetPath(strtTile.x, strtTile.y, endTile.x, endTile.y, withChar);
     }
 
-    public Stack<Node> GetPath(Vector3 strt, int x, int y)
+    public AStarPath GetPath(Vector3 strt, int x, int y, bool withChar = true)
     {
         var strtTile = WorldToTile(strt);
-        return GetPath(strtTile.x, strtTile.y, x, y);
+        return GetPath(strtTile.x, strtTile.y, x, y, withChar);
     }
 
     public Vector2Int WorldToTile(Vector3 world)
@@ -110,11 +118,4 @@ public class TileManager : MonoBehaviour
     {
         return Mathf.Round(n / x) * x;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 }
